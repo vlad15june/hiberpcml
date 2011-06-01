@@ -47,7 +47,6 @@ public class Manager {
     private Properties configuration;
 
     public Manager() {
-        resetConnection();
     }
 
     public void invoke(Object pcml) throws PcmlException {
@@ -90,6 +89,9 @@ public class Manager {
             }
         }
 
+        if (configuration == null) {
+            throw new IllegalStateException("This instance has not been configured yet");
+        }
         libraries = configuration.getProperty("as400.pcml.libraries");
         as400 = new AS400(
                 configuration.getProperty("as400.pcml.host"),
@@ -251,5 +253,6 @@ public class Manager {
      */
     public void setConfiguration(Properties configuration) {
         this.configuration = configuration;
+        resetConnection();
     }
 }
