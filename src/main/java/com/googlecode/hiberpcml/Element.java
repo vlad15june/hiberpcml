@@ -50,4 +50,6 @@ public @interface Element {
      * @return
      */
     int size() default 0;
+
+    public UsageType usage() default UsageType.INPUTOUTPUT;
 }

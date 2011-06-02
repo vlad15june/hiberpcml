@@ -124,8 +124,12 @@ public class Manager {
     @SuppressWarnings("unchecked")
     private void setValue(Field field, Object valueField, String path) throws Exception {
         if (field.isAnnotationPresent(Element.class)) {
-            Object value = getField(field, valueField);
             Element pcmlElement = field.getAnnotation(Element.class);
+            if (!pcmlElement.usage().equals(UsageType.INPUT)
+                    && !pcmlElement.usage().equals(UsageType.INPUTOUTPUT)) {
+                return;
+            }
+            Object value = getField(field, valueField);
             path = path + "." + pcmlElement.pcmlName();
 
             if (field.getType().isAnnotationPresent(Struct.class)) {
@@ -142,6 +146,10 @@ public class Manager {
         } else if (field.isAnnotationPresent(Array.class)) {
             Object value;
             Array pcmlArray = field.getAnnotation(Array.class);
+            if (!pcmlArray.usage().equals(UsageType.INPUT)
+                    && !pcmlArray.usage().equals(UsageType.INPUTOUTPUT)) {
+                return;
+            }
             path = path + "." + pcmlArray.pcmlName();
             List arrayValue = (List) getField(field, valueField);
 

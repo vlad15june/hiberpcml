@@ -23,24 +23,20 @@
  */
 package com.googlecode.hiberpcml;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
  *
  * @author John Arevalo <johnarevalo@gmail.com>
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Array {
+public enum UsageType {
 
-    int size();
+    INPUT("input"), INPUTOUTPUT("inputoutput"), OUTPUT("output");
+    private final String value;
 
-    String pcmlName();
+    private UsageType(String value) {
+        this.value = value;
+    }
 
-    Class type();
-
-    public UsageType usage() default UsageType.INPUTOUTPUT;
+    public String value() {
+        return value;
+    }
 }
