@@ -50,15 +50,15 @@ public class Manager {
     }
 
     public void invoke(Object pcml) throws PcmlException {
-        Command command = pcml.getClass().getAnnotation(Command.class);
+        Program program = pcml.getClass().getAnnotation(Program.class);
         try {
-            pcmlDoc = new ProgramCallDocument(as400, command.documentName());
+            pcmlDoc = new ProgramCallDocument(as400, program.documentName());
             Field[] fields = pcml.getClass().getDeclaredFields();
             for (Field field : fields) {
-                setValue(field, pcml, command.programName());
+                setValue(field, pcml, program.programName());
             }
 
-            pcmlDoc.callProgram(command.programName());
+            pcmlDoc.callProgram(program.programName());
 
             AS400Message[] messageList = pcmlDoc.getProgramCall().getMessageList();
             if (messageList != null && messageList.length > 0) {
@@ -69,7 +69,7 @@ public class Manager {
                 throw new PcmlException(buffer.toString());
             }
             for (Field field : fields) {
-                getValue(field, pcml, command.programName());
+                getValue(field, pcml, program.programName());
             }
         } catch (com.ibm.as400.data.PcmlException exc) {
             // on every error reset connection, in order to avoid blocking 
@@ -123,14 +123,14 @@ public class Manager {
 
     @SuppressWarnings("unchecked")
     private void setValue(Field field, Object valueField, String path) throws Exception {
-        if (field.isAnnotationPresent(Element.class)) {
-            Element pcmlElement = field.getAnnotation(Element.class);
-            if (!pcmlElement.usage().equals(UsageType.INPUT)
-                    && !pcmlElement.usage().equals(UsageType.INPUTOUTPUT)) {
+        if (field.isAnnotationPresent(Data.class)) {
+            Data pcmlData = field.getAnnotation(Data.class);
+            if (!pcmlData.usage().equals(UsageType.INPUT)
+                    && !pcmlData.usage().equals(UsageType.INPUTOUTPUT)) {
                 return;
             }
             Object value = getField(field, valueField);
-            path = path + "." + pcmlElement.pcmlName();
+            path = path + "." + pcmlData.pcmlName();
 
             if (field.getType().isAnnotationPresent(Struct.class)) {
                 for (Field structField : field.getType().getDeclaredFields()) {
@@ -138,7 +138,7 @@ public class Manager {
                 }
             } else {
                 if (value instanceof String) {
-                    value = Util.completeWith((String) value, pcmlElement.completeWith(), pcmlElement.size());
+                    value = Util.completeWith((String) value, pcmlData.completeWith(), pcmlData.size());
                 }
                 pcmlDoc.setValue(path, value);
             }
@@ -155,8 +155,8 @@ public class Manager {
 
             if (pcmlArray.type().isAnnotationPresent(Struct.class)) {
                 for (Field structField : pcmlArray.type().getDeclaredFields()) {
-                    if (structField.isAnnotationPresent(Element.class)) {
-                        Element pcmlElement = structField.getAnnotation(Element.class);
+                    if (structField.isAnnotationPresent(Data.class)) {
+                        Data pcmlData = structField.getAnnotation(Data.class);
                         int indices[] = new int[1];
                         for (int i = 0; i < pcmlArray.size(); i++) {
                             indices[0] = i;
@@ -167,11 +167,11 @@ public class Manager {
                             }
                             try {
                                 if (value instanceof String) {
-                                    value = Util.completeWith((String) value, pcmlElement.completeWith(), pcmlElement.size());
+                                    value = Util.completeWith((String) value, pcmlData.completeWith(), pcmlData.size());
                                 }
-                                pcmlDoc.setValue(path + "." + pcmlElement.pcmlName(), indices, value);
+                                pcmlDoc.setValue(path + "." + pcmlData.pcmlName(), indices, value);
                             } catch (Exception exc) {
-                                throw new Exception("Error setting \"" + path + "." + pcmlElement.pcmlName()
+                                throw new Exception("Error setting \"" + path + "." + pcmlData.pcmlName()
                                         + "\" with value '" + value + "' (" + exc.getMessage() + ")");
                             }
                         }
@@ -194,16 +194,16 @@ public class Manager {
 
     @SuppressWarnings("unchecked")
     private void getValue(Field field, Object valueField, String path) throws Exception {
-        if (field.isAnnotationPresent(Element.class)) {
-            Element pcmlElement = field.getAnnotation(Element.class);
+        if (field.isAnnotationPresent(Data.class)) {
+            Data pcmlData = field.getAnnotation(Data.class);
             if (field.getType().isAnnotationPresent(Struct.class)) {
                 Object struct = getField(field, valueField);
 
                 for (Field structField : field.getType().getDeclaredFields()) {
-                    getValue(structField, struct, path + "." + pcmlElement.pcmlName());
+                    getValue(structField, struct, path + "." + pcmlData.pcmlName());
                 }
             } else {
-                Object value = pcmlDoc.getValue(path + "." + pcmlElement.pcmlName());
+                Object value = pcmlDoc.getValue(path + "." + pcmlData.pcmlName());
                 setField(field, valueField, value);
             }
         } else if (field.isAnnotationPresent(Array.class)) {
@@ -217,9 +217,9 @@ public class Manager {
                     indices[0] = i;
                     Object elementArray = pcmlArray.type().getDeclaredConstructor().newInstance();
                     for (Field structField : pcmlArray.type().getDeclaredFields()) {
-                        if (structField.isAnnotationPresent(Element.class)) {
-                            Element pcmlElement = structField.getAnnotation(Element.class);
-                            Object value = pcmlDoc.getValue(path + "." + pcmlElement.pcmlName(), indices);
+                        if (structField.isAnnotationPresent(Data.class)) {
+                            Data pcmlData = structField.getAnnotation(Data.class);
+                            Object value = pcmlDoc.getValue(path + "." + pcmlData.pcmlName(), indices);
                             setField(structField, elementArray, value);
                         }
                     }

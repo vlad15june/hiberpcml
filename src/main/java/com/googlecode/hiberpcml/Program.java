@@ -31,7 +31,7 @@ import java.lang.annotation.RetentionPolicy;
  * @author John Arevalo <johnarevalo@gmail.com>
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Command {
+public @interface Program {
 
     String documentName();
 

@@ -31,7 +31,7 @@ import java.lang.annotation.RetentionPolicy;
  * @author John Arevalo <johnarevalo@gmail.com>
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Element {
+public @interface Data {
 
     /**
      * El nombre del elemento pcml
