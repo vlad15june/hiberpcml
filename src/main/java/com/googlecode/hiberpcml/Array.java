@@ -29,15 +29,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
+ * Marks a field as Array Object.
+ * This annotation should be applied to elements which have "count" value
+ * grater than zero.
+ * 
  * @author John Arevalo <johnarevalo@gmail.com>
+ * @see http://publib.boulder.ibm.com/infocenter/iseries/v5r4/index.jsp?topic=%2Frzahh%2Fpcmldttg.htm
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Array {
 
+    /**
+     * The length of this array. Given by the attribute "count" in data element
+     * @return 
+     */
     int size();
 
+    /**
+     * 
+     * @return 
+     */
     String pcmlName();
 
     Class type();

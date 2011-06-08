@@ -39,18 +39,23 @@ import java.util.logging.Logger;
  *
  * @author John Arevalo <johnarevalo@gmail.com>
  */
-public class Manager {
+public class SessionManager {
 
     private AS400 as400;
     private ProgramCallDocument pcmlDoc;
     private String libraries;
     private Properties configuration;
 
-    public Manager() {
+    public SessionManager() {
     }
 
     public void invoke(Object pcml) throws PcmlException {
+        if (!pcml.getClass().isAnnotationPresent(Program.class)) {
+            throw new PcmlException("class: " + pcml.getClass() + " is not a "
+                    + "@com.googlecode.hiberpcml.Program annotated class");
+        }
         Program program = pcml.getClass().getAnnotation(Program.class);
+
         try {
             pcmlDoc = new ProgramCallDocument(as400, program.documentName());
             Field[] fields = pcml.getClass().getDeclaredFields();
@@ -85,7 +90,7 @@ public class Manager {
             try {
                 as400.disconnectAllServices();
             } catch (Exception ex) {
-                Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SessionManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -101,7 +106,7 @@ public class Manager {
         try {
             commandCall.run("CHGLIBL LIBL(" + libraries + ")");
         } catch (Exception ex) {
-            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SessionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         //suggested values to logging
         int logLevel = 4;
@@ -117,7 +122,7 @@ public class Manager {
         try {
             commandCall.run("CHGJOB LOG(" + logLevel + " " + logSeverity + " *SECLVL) LOGCLPGM(*YES) INQMSGRPY(*DFT) LOGOUTPUT(*JOBEND)");
         } catch (Exception ex) {
-            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SessionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
