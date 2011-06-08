@@ -76,10 +76,6 @@ public class SessionManager {
             for (Field field : fields) {
                 getValue(field, pcml, program.programName());
             }
-        } catch (com.ibm.as400.data.PcmlException exc) {
-            // on every error reset connection, in order to avoid blocking 
-            resetConnection();
-            throw new PcmlException(exc);
         } catch (Exception ex) {
             throw new PcmlException(ex);
         }
