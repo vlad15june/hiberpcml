@@ -37,5 +37,11 @@
     <scm>
         <url>http://code.google.com/p/hiberpcml/source/browse/</url>
         <connection>scm:hg:https://hiberpcml.googlecode.com/hg/</connection>
+        <developerConnection>scm:hg:https://hiberpcml.googlecode.com/hg/</developerConnection>
     </scm>
+    <parent>
+        <groupId>net.java</groupId>
+        <artifactId>jvnet-parent</artifactId>
+        <version>1</version>
+    </parent>
 </project>
