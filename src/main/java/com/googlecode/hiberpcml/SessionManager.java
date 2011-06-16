@@ -139,7 +139,7 @@ public class SessionManager {
                 }
             } else {
                 if (value instanceof String) {
-                    value = Util.completeWith((String) value, pcmlData.completeWith(), pcmlData.size());
+                    value = Util.completeWith((String) value, pcmlData.completeWith(), pcmlData.length());
                 }
                 pcmlDoc.setValue(path, value);
             }
@@ -168,7 +168,7 @@ public class SessionManager {
                             }
                             try {
                                 if (value instanceof String) {
-                                    value = Util.completeWith((String) value, pcmlData.completeWith(), pcmlData.size());
+                                    value = Util.completeWith((String) value, pcmlData.completeWith(), pcmlData.length());
                                 }
                                 pcmlDoc.setValue(path + "." + pcmlData.pcmlName(), indices, value);
                             } catch (Exception exc) {

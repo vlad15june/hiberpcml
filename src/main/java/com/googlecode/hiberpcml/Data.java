@@ -49,7 +49,7 @@ public @interface Data {
      * indica el tamaño del elemento
      * @return
      */
-    int size() default 0;
+    int length() default 0;
 
     public UsageType usage() default UsageType.INPUTOUTPUT;
 }
