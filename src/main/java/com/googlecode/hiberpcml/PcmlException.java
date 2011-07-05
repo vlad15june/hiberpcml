@@ -24,7 +24,8 @@
 package com.googlecode.hiberpcml;
 
 /**
- *
+ * Thrown when an error is encountered invoking Pcml with SessionManager 
+ * instance.
  * @author John Arevalo <johnarevalo@gmail.com>
  */
 public class PcmlException extends Exception {

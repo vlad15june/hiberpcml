@@ -23,17 +23,33 @@
  */
 package com.googlecode.hiberpcml;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- *
+ * Marks a Class as a invokable object valid to use in 
+ * {@link SessionManager#invoke(java.lang.Object) }
  * @author John Arevalo <johnarevalo@gmail.com>
+ * @see <a href="http://publib.boulder.ibm.com/infocenter/iseries/v5r4/topic/rzahh/pcmlpgtg.htm">PCML program tag</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 public @interface Program {
 
+    /**
+     * The document resource name of the PCML document for the programs to be 
+     * called. The resource name can be a package qualified name. For example, 
+     * "com.myCompany.myPackage.myPcml".
+     * @return The document resource name.
+     * @see com.ibm.as400.data.ProgramCallDocument#ProgramCallDocument(com.ibm.as400.access.AS400, java.lang.String)
+     */
     String documentName();
 
+    /**
+     * 
+     * @return The RPG program name
+     */
     String programName();
 }

@@ -28,7 +28,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
+ * Marks a field as a significant struct for pcml invocation.
+ * This annotation should be applied to elements which have struct value
+ * @see <a href="http://publib.boulder.ibm.com/infocenter/iseries/v5r4/topic/rzahh/pcmlsttg.htm">PCML Struct tag</a>
  * @author John Arevalo <johnarevalo@gmail.com>
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -29,30 +29,37 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a field as Array Object.
+ * Marks a field as a significant array object for pcml invocation.
  * This annotation should be applied to elements which have "count" value
  * grater than zero.
  * 
  * @author John Arevalo <johnarevalo@gmail.com>
- * @see http://publib.boulder.ibm.com/infocenter/iseries/v5r4/index.jsp?topic=%2Frzahh%2Fpcmldttg.htm
+ * @see <a href="http://publib.boulder.ibm.com/infocenter/iseries/v5r4/index.jsp?topic=%2Frzahh%2Fpcmldttg.htm">PCML data tag</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Array {
 
     /**
-     * The length of this array. Given by the attribute "count" in data element
-     * @return 
+     * 
+     * @return The length of this array. Given by the attribute "count" in data 
+     * element.
      */
     int size();
 
     /**
      * 
-     * @return 
+     * @return name given to this array in the .pcml file.
      */
     String pcmlName();
 
     Class type();
 
+    /**
+     * Specifies the usage of this param in the pcml. 
+     * Default value is {@link UsageType#INPUTOUTPUT}
+     * @return Usage of this param. 
+     * @see UsageType
+     */
     public UsageType usage() default UsageType.INPUTOUTPUT;
 }

@@ -27,29 +27,35 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- *
+ * Marks a field as a significant element for pcml invocation.
  * @author John Arevalo <johnarevalo@gmail.com>
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Data {
 
     /**
-     * El nombre del elemento pcml
-     * @return
+     * 
+     * @return name given to this array in the .pcml file
      */
     String pcmlName();
 
     /**
-     * indica un String para completar una cadena
-     * @return
+     * Fill the param with this String.
+     * @return String used when it is necesary fill the param with fixed length
      */
     String completeWith() default "";
 
     /**
-     * indica el tamaño del elemento
-     * @return
+     * This param is used to fill this value with {@link #completeWith()}
+     * @return max length for this data.
      */
     int length() default 0;
 
+    /**
+     * Specifies the usage of this param in the pcml. 
+     * Default value is {@link UsageType#INPUTOUTPUT}
+     * @return Usage of this param. 
+     * @see UsageType
+     */
     public UsageType usage() default UsageType.INPUTOUTPUT;
 }
