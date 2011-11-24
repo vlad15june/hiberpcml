@@ -67,4 +67,12 @@ public final class Util {
         return camelCased.toString();
 
     }
+    
+    /**
+     * check whether a String is empty or not
+     * @return
+     */
+    public static boolean isEmpty(String string) {
+        return string == null || string.trim().isEmpty();
+    }
 }
