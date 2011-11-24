@@ -50,6 +50,7 @@ public class SessionManager {
     }
 
     public void invoke(Object pcml) throws PcmlException {
+        validateConfiguration();
         if (!pcml.getClass().isAnnotationPresent(Program.class)) {
             throw new PcmlException("class: " + pcml.getClass() + " is not a "
                     + "@com.googlecode.hiberpcml.Program annotated class");
@@ -82,6 +83,7 @@ public class SessionManager {
     }
 
     private void resetConnection() {
+        validateConfiguration();
         if (as400 != null) {
             try {
                 as400.disconnectAllServices();
@@ -90,9 +92,6 @@ public class SessionManager {
             }
         }
 
-        if (configuration == null) {
-            throw new IllegalStateException("This instance has not been configured yet");
-        }
         libraries = configuration.getProperty("as400.pcml.libraries");
         as400 = new AS400(
                 configuration.getProperty("as400.pcml.host"),
@@ -263,5 +262,27 @@ public class SessionManager {
     public void setConfiguration(Properties configuration) {
         this.configuration = configuration;
         resetConnection();
+    }
+
+    /**
+     * Check if this instance has been configured
+     */
+    private void validateConfiguration() {
+        if (configuration == null) {
+            throw new IllegalStateException("This instance has not been configured yet");
+        }
+
+        if (Util.isEmpty(configuration.getProperty("as400.pcml.host"))) {
+            throw new IllegalStateException("as400.pcml.host property is "
+                    + "required");
+        }
+        if (Util.isEmpty(configuration.getProperty("as400.pcml.user"))) {
+            throw new IllegalStateException("as400.pcml.host property is "
+                    + "required");
+        }
+        if (Util.isEmpty(configuration.getProperty("as400.pcml.password"))) {
+            throw new IllegalStateException("as400.pcml.host property is "
+                    + "required");
+        }
     }
 }
